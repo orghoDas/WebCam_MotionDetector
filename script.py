@@ -5,6 +5,9 @@ import cv2, time
 first_frame = None
 
 
+status_list = []
+
+
 # VIDEO CAPTURE
 video = cv2.VideoCapture(0)
 
@@ -12,6 +15,8 @@ video = cv2.VideoCapture(0)
 while True:
     # READING THE VIDEO 
     check, frame = video.read()
+
+    status = 0
 
     # GRAYSCALE
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -36,12 +41,16 @@ while True:
 
     # CONTOUR LOOP
     for contour in cnts:
-        if cv2.contourArea(contour) < 1000:
+        if cv2.contourArea(contour) < 10000:
             continue
+
+        status = 1
 
         (x, y, w, h) = cv2.boundingRect(contour)
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
 
+
+    status_list.append(status)
 
     # FRAME WINDOWS 
     cv2.imshow("Gray Frame", gray)
@@ -52,14 +61,13 @@ while True:
     # WAIT KEY 
     key = cv2.waitKey(1)
 
-    # PRINTING ARRAYS IN TERMINAL
-    print(gray)
-    print(delta_frame)
-
     # BREAK KEY 
     if key == ord('q'):
         break
 
+    
+    
+print(status_list)
 
 # CALLING FUNCTONS
 video.release()
