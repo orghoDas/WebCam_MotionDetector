@@ -1,11 +1,13 @@
 import cv2, time 
+from datetime import datetime
 
 
 # FIRST FRAME
 first_frame = None
 
 
-status_list = []
+status_list = [None, None]
+times = []
 
 
 # VIDEO CAPTURE
@@ -52,6 +54,13 @@ while True:
 
     status_list.append(status)
 
+    if status_list[-1] == 1 and status_list[-2] == 0:
+        times.append(datetime.now())
+
+    if status_list[-1] == 0 and status_list[-2] == 1:
+        times.append(datetime.now())
+
+
     # FRAME WINDOWS 
     cv2.imshow("Gray Frame", gray)
     cv2.imshow("Delta Frame", delta_frame)
@@ -68,6 +77,7 @@ while True:
     
     
 print(status_list)
+print(times)
 
 # CALLING FUNCTONS
 video.release()
