@@ -1,4 +1,4 @@
-import cv2, time 
+import cv2, time, pandas 
 from datetime import datetime
 
 
@@ -8,6 +8,8 @@ first_frame = None
 
 status_list = [None, None]
 times = []
+
+df = pandas.DataFrame(columns=["Start", "End"])
 
 
 # VIDEO CAPTURE
@@ -72,12 +74,21 @@ while True:
 
     # BREAK KEY 
     if key == ord('q'):
+        if status == 1:
+            times.append(datetime.now())
+
         break
 
     
     
 print(status_list)
 print(times)
+
+for i in range(0, len(times), 2):
+    df = df.append({"Start" : times[i], "End" : times[i+1]}, ignore_index = True)
+
+
+df.to_csv('Times.csv')
 
 # CALLING FUNCTONS
 video.release()
